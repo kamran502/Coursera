@@ -1,4 +1,4 @@
-
+## Assignment completed by Syed Kamran Ali
 makeCacheMatrix <- function(x = matrix()) {
   m<-NULL
   set<-function(y){
@@ -16,7 +16,7 @@ list(set=set, get=get,
 cacheSolve <- function(x=matrix(), ...) {
     m<-x$getmatrix()
     if(!is.null(m)){
-      message("getting cached data")
+      message("getting cached data.")
       return(m)
     }
     datos<-x$get()
