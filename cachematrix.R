@@ -1,26 +1,64 @@
 ## Assignment completed by Syed Kamran Ali
+## Caching the Inverse of a Matrix:
+## Matrix inversion is usually a costly computation and there may be some 
+## benefit to caching the inverse of a matrix rather than compute it repeatedly.
+## There are two functions below and achieve following:
+## makeCacheMatrix: Creates a square invertible matrix
+## cacheSolve:  Inverses the matrix and caches the result cache environment
+
 makeCacheMatrix <- function(x = matrix()) {
-  m<-NULL
-  set<-function(y){
-  x<<-y
-  m<<-NULL
-}
-get<-function() x
-setmatrix<-function(solve) m<<- solve
-getmatrix<-function() m
-list(set=set, get=get,
-   setmatrix=setmatrix,
-   getmatrix=getmatrix)
+        inv <- NULL
+        set <- function(y) {
+                x <<- y
+                inv <<- NULL
+        }
+        get <- function() x
+        setInverse <- function(inverse) inv <<- inverse
+        getInverse <- function() inv
+        list(set = set,
+             get = get,
+             setInverse = setInverse,
+             getInverse = getInverse)
 }
 
-cacheSolve <- function(x=matrix(), ...) {
-    m<-x$getmatrix()
-    if(!is.null(m)){
-      message("getting cached data.")
-      return(m)
-    }
-    datos<-x$get()
-    m<-solve(datos, ...)
-    x$setmatrix(m)
-    m
+
+## cacheSolve function computes the inverse of the special "matrix" created by 
+## makeCacheMatrix above. It checks if the inverse has already been calculated, 
+## if not then it should retrieve the inverse from the cache.
+
+cacheSolve <- function(x, ...) {
+        ## Return a matrix that is the inverse of 'x'
+        inv <- x$getInverse()
+        if (!is.null(inv)) {
+                message("getting cached data")
+                return(inv)
+        }
+        mat <- x$get()
+        inv <- solve(mat, ...)
+        x$setInverse(inv)
+        inv
 }
+
+## Testing the functions
+
+##> source("cachematrix.R")									Load R program from saved location
+##> sp_matrix <- makeCacheMatrix(matrix(1:4, 2, 2))			Create a square invertible matrix and set values
+##> sp_matrix$get()											Get the value of the matrix
+##     [,1] [,2]
+##[1,]    1    3
+##[2,]    2    4
+##> sp_matrix$getInverse()									Get the inverted matrix from cache
+##NULL														It will be NULL first time
+##> cacheSolve(sp_matrix)									Computes the inverse of matrix and returns the values
+##     [,1] [,2]											
+##[1,]   -2  1.5
+##[2,]    1 -0.5
+##> cacheSolve(sp_matrix)									Call the same function again and you will see that
+##getting cached data										this time function gets the data from cache
+##     [,1] [,2]
+##[1,]   -2  1.5
+##[2,]    1 -0.5
+##> sp_matrix$getInverse()									
+##     [,1] [,2]
+##[1,]   -2  1.5
+##[2,]    1 -0.5
